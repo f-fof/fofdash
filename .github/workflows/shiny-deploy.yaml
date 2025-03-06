@@ -26,8 +26,6 @@ jobs:
           r-version: renv
 
       - uses: r-lib/actions/setup-renv@v2
-        with:
-          profile: '"shiny"'
 
       - name: Update dashboard data
         run: |
