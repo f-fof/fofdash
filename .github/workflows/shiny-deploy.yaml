@@ -52,6 +52,7 @@ jobs:
           ACCOUNT: aiti
           SERVER: shinyapps.io # server to deploy
         run: |
+          renv::restore()
           rsconnect::setAccountInfo(name = "${{ env.ACCOUNT }}", token = "${{ secrets.SHINYAPPS_TOKEN }}", secret = "${{ secrets.SHINYAPPS_SECRET }}")
           rsconnect::deployApp(appName = "${{ env.APPNAME }}", account = "${{ env.ACCOUNT }}", server = "${{ env.SERVER }}", forceUpdate = TRUE)
         shell: Rscript {0}
