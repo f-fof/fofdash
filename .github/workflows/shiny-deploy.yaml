@@ -8,7 +8,8 @@ on:
 
 name: shiny-deploy.yaml
 
-permissions: read-all
+permissions: 
+  contents: write
 
 jobs:
   shiny-deploy:
