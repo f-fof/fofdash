@@ -3,6 +3,7 @@ library(reportabs)
 library(readabs)
 library(tidyverse)
 library(ecomplexity)
+library(strayr)
 
 labour_force <- read_absdata("labour_force") |> 
   select(date, indicator, sex, age, state, value, series_type, unit) |> 

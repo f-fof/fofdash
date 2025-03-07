@@ -34,6 +34,7 @@ jobs:
 
       - name: Update dashboard data
         run: |
+          Rscript -e "remotes::install_github('runapp-aus/strayr')"
           Rscript -e "source('data-raw/dashboard_data.R')"
           Rscript -e "devtools::document()"
           
