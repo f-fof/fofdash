@@ -140,10 +140,6 @@ user_guide_tab <- function(...) {
 #### UI ####
 dash_ui <- function(...) {
   page_navbar(
-    theme = bs_theme(
-      preset = "shiny",
-      "primary" = "#DC5000"
-    ),
     lang = "en",
     title = "Economic Indicators Dashboard",
     nav_panel(title = "Dashboard", summaryUI("table")),

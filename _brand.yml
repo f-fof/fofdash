@@ -1,0 +1,16 @@
+meta:
+  name: brand.yml
+
+
+color:
+  palette:
+    orange: "#DC5400"
+    sand: "#F6EEE1"
+  primary: orange
+  danger: sand
+
+typography:
+  fonts:
+    - family: DM Sans
+      source: google
+  base: DM Sans
