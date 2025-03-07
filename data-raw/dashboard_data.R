@@ -2,6 +2,8 @@
 library(reportabs)
 library(readabs)
 library(tidyverse)
+library(ecomplexity)
+library(strayr)
 
 labour_force <- read_absdata("labour_force") |> 
   select(date, indicator, sex, age, state, value, series_type, unit) |> 
@@ -30,3 +32,43 @@ dashboard_data <- dashboard_data |>
 
 usethis::use_data(dashboard_data, compress = 'xz', overwrite = TRUE)  
          
+# Economic Complexity -----------------------------------------------------
+
+
+
+complexity_exports <- read_complexitydata("state_economic_complexity") |> 
+  select(year, location_code, hs_product_code, export_value, rca) |> 
+  inner_join(read_complexitydata("atlas_pci"), by = c("hs_product_code", "year"))
+
+usethis::use_data(complexity_exports, compress = 'xz', overwrite = TRUE)
+
+complexity_rankings <- read_complexitydata("state_economic_complexity") |> 
+  distinct(year, location_code, eci_rank) |> 
+  mutate(year = as.Date(paste0(year, "0101"), format = "%Y%d%m"),
+         location_code = clean_state(location_code, to = "state_name"))
+
+complexity_rankings_final <- complexity_rankings |> 
+  slice_max(order_by = year) |> 
+  distinct(location_code, eci_rank_final = eci_rank) |> 
+  mutate(location_code = clean_state(location_code, to = "state_name"))
+
+complexity_rankings_first <- complexity_rankings |> 
+  slice_min(order_by = year) |> 
+  distinct(location_code, eci_rank_first = eci_rank) |> 
+  mutate(location_code = clean_state(location_code, to = "state_name")) 
+
+complexity_rankings <- complexity_rankings |> 
+  inner_join(complexity_rankings_first) |> 
+  inner_join(complexity_rankings_final)
+
+usethis::use_data(complexity_rankings, overwrite = TRUE)
+
+complexity_opportunities <- read_complexitydata("state_economic_complexity") |> 
+  filter(year == max(year)) |> 
+  select(year, location_code, hs_product_code, export_value, rca, product_complexity_index, cog, density)
+
+
+complexity_opportunities <- complexity_opportunities |> 
+  inner_join(complexity_classification) 
+
+usethis::use_data(complexity_opportunities, compress = 'xz', overwrite = TRUE)

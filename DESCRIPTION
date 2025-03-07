@@ -1,5 +1,5 @@
-Package: aitidash
-Title: AITI WorkSight/Economic Indicators Dashboard
+Package: fofdash
+Title: Flinders Factory of the Future Economic Indicators Dashboard
 Version: 0.0.1.9000
 Authors@R: 
     person(given = "Hamish",
@@ -15,7 +15,6 @@ RoxygenNote: 7.3.2
 Imports:
     shiny,
     shinyWidgets,
-    fresh,
     dplyr,
     forcats,
     ggplot2,
@@ -34,10 +33,12 @@ Imports:
     xml2,
     rvest,
     tibble,
-    bs4Dash
-Remotes: 
-    aiti-flinders/reportabs,
+    bslib,
+    ecomplexity (>= 0.0.0.9000)
+Remotes:  
+    f-fof/reportabs,
     runapp-aus/strayr,
+    f-fof/ecomplexity
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

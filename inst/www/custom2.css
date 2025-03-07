@@ -1,10 +1,10 @@
 .btn-default.active {
   color: white; 
-  background-color: #0077ff;
+  background-color: #DC5300;
 }
 
 .btn-default:hover, .btn-default:active, .btn-default:focus {
-  color: #0077ff;
+  color: #DC5300;
 }
 
 /* Leaflet legend alignment */

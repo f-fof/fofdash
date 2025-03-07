@@ -1,6 +1,6 @@
 .onLoad <- function(...) {
   shiny::addResourcePath(
     prefix = "custom-assets",
-    directoryPath = system.file("www", package = "aitidash")
+    directoryPath = system.file("www", package = "fofdash")
   )
 }
