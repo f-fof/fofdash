@@ -7,7 +7,7 @@ on:
   schedule:
     - cron: '10 1 * * 1-5'
 
-name: shiny-deploy.yaml
+name: shiny-deploy-dev.yaml
 
 permissions: 
   contents: write
