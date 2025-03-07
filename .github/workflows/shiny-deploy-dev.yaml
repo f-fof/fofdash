@@ -34,10 +34,8 @@ jobs:
 
       - name: Update dashboard data
         run: |
-          install.packages(c('readabs', 'remotes', 'tidyverse', 'usethis'))
-          remotes::install_github('aiti-flinders/reportabs')
-          source('data-raw/dashboard_data.R')
-          devtools::document()
+          Rscript -e "source('data-raw/dashboard_data.R')"
+          Rscript -e "devtools::document()"
           
       - name: Commit new data
         run: |
