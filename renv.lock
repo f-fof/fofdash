@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.4.0",
+    "Version": "4.4.3",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -4628,7 +4628,7 @@
       "RemoteUsername": "aiti-flinders",
       "RemoteRepo": "reportabs",
       "RemoteRef": "master",
-      "RemoteSha": "50cdbab97b1a3467c58abb7909cea66985aeb6c3",
+      "RemoteSha": "e7a785864696c0d082bc85a433393e7de634c1e4",
       "RemoteHost": "api.github.com",
       "Remotes": "github::runapp-aus/strayr"
     },
