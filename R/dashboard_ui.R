@@ -33,42 +33,7 @@ download_graph_ui <- function(id) {
   )
 }
 
-sidebar <- function(...) {
-  dashboardSidebar(
-    skin = "light",
-    width = "230px",
-    sidebarMenu(
-      id = "sidebarmenu",
-      menuItem(
-        text = "Summary",
-        tabName = 'dashboard',
-        icon = icon("chart-bar"),
-        selected = TRUE
-      ),
-      menuItem(
-        text = "Employment Insights",
-        tabName = "employment_insights",
-        icon = icon("briefcase"),
-        menuSubItem(
-          text = "Labour Force",
-          tabName = "employment",
-          icon = icon("briefcase")
-        )
-      ),
-      menuItem(
-        text = "Industry Insights",
-        tabName = "industry_insights",
-        icon = icon('industry'),
-        menuSubItem(
-          text = "Employment by Industry",
-          tabName = "industry_employment",
-          icon = icon("industry")
-        )
-      )
-      
-    )
-  )
-}
+
 
 #### Specfic Instructions ####
 specific_instructions <- function(...)  {
@@ -170,114 +135,34 @@ user_guide_tab <- function(...) {
   )
 }
 #### Summary UI ####
-summary_ui <- function(...) {
-  
-  lf_release <- list("current" = current_release(),
-                     "nxt" = next_release())
-  
-  fluidPage(
-    h1(textOutput("region_selected")),
-    h2(paste0("Employment Insights - ", reportabs::release(labour_force, "month"), " ", reportabs::release(labour_force, "year"))),
-    p(paste0("Last updated on: ", format(lf_release$current, "%A, %d %B %Y"))),
-    p(paste0("The next update is: ", format(lf_release$nxt, "%A, %d %B %Y"))),
-    fluidRow(width = 12,
-             table_ui("table")),
-  
-  )
-}
 
-
-
-#### Dashboard Tab ####
-dashboard_tab <- function(...) {
-  tabItem(
-    tabName = 'dashboard',
-    summary_ui()
-  )
-}
-
-#### Labour Market Tab ####
-labour_market_tab <- function(...) {
-  tabItem(
-    tabName = 'employment',
-    fluidRow(
-      tabBox(
-        id = 'labour_market_tab_id',
-        width = 12,
-        labourMarketUI("lm_ts", data = labour_force),
-        labourMarketDemogUI("lm_demog", data = labour_force)
-      )
-    )
-  )
-}
-
-
-
-
-
-#Employment by Industry
-emp_ind_tab <- function(...) {
-  tabItem(
-    tabName = 'industry_employment',
-    fluidRow(
-      tabBox(
-        id = "employment_industry_tab_id",
-        width = 12,
-        empIndUI("empInd_ts", data = industry_employment),
-        empIndComparisonUI("empInd_region", data = industry_employment)
-      )
-    )
-  )
-}
-
-
-
-
-header <- function(...) {
-  dashboardHeader(
-    skin = "light",
-    title = dashboardBrand(
-      title = "Economic Indicators",
-      href = "http://www.flinders.edu.au/aiti",
-      image =  "custom-assets/aiti_logo.png",
-      opacity = 1.0
-    ),
-    fixed = TRUE,
-    leftUI = conditionalPanel(
-      condition = "input.sidebarmenu === 'dashboard'",
-      radioGroupButtons(
-        inputId = "region_select",
-        choiceNames = toupper(clean_state(regions())),
-        choiceValues = regions(),
-        selected = "Australia",
-        direction = "horizontal",
-        justified = FALSE
-      )
-    )
-  )
-}
-
-body <- function(...) {
-  dashboardBody(
-    #tags$head(includeHTML(("custom-assets/google-analytics.html"))),
-    tags$head(tags$link(rel = "stylesheet", type = 'text/css', href = 'custom-assets/custom2.css')),
-    tabItems(
-      dashboard_tab(),
-      labour_market_tab(),
-      emp_ind_tab()
-    )
-  )
-}
 
 #### UI ####
 dash_ui <- function(...) {
-  dashboardPage(
-    dark = FALSE,
+  page_navbar(
+    theme = bs_theme(
+      preset = "shiny",
+      "primary" = "#DC5000"
+    ),
+    lang = "en",
     title = "Economic Indicators Dashboard",
-    header = header(),
-    sidebar = sidebar(),
-    body = body(), 
-    footer = dashboardFooter(left = "Australian Industrial Transformation Institute", fixed = TRUE, right = "Flinders University")
+    nav_panel(title = "Dashboard", summaryUI("table")),
+    nav_panel(title = "Labour Force",
+              navset_card_tab(title = "Labour Force",
+                              nav_panel("Regional Comparison",   labourMarketUI("lm_ts", data = labour_force)),
+                              nav_panel("Demographic Comparison",   labourMarketDemogUI("lm_demog", data = labour_force))
+                              
+              )
+    ),
+    nav_panel(title = "Industry Composition",
+              navset_card_tab(title = "Industry Composition", 
+                              nav_panel("Employment by Industry", industryEmploymentUI("empInd_ts", data = industry_employment)),
+                              nav_panel("Regional Comparison", industryEmploymentComparisonUI("empInd_region", data = industry_employment))
+              )
+    ),
+    nav_panel(title = "Economic Complexity",
+              complexityUI("complexity")
+    )
   )
 }
 

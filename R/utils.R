@@ -66,7 +66,8 @@ labour_market_indicators <- function() {
 
 series_choices <- function() {
   c("Original",
-    "Seasonally Adjusted")
+    "Seasonally Adjusted",
+    "Trend")
 }
 
 regions <- function() {
@@ -121,10 +122,10 @@ create_sparklines <- function(data, region) {
                                type = "line",
                                width = "160px",
                                height = "50px", 
-                               lineColor = "#001155",
+                               lineColor = unname(fof_cols("Midnight Navy")),
                                fillColor = FALSE, 
                                spotRadius = 3,
-                               spotColor = "#006eff",
+                               spotColor = unname(fof_cols("Summer Red")),
                                minSpotColor = FALSE,
                                maxSpotColor = FALSE)) %>%
     dplyr::ungroup()
