@@ -4,6 +4,7 @@ library(readabs)
 library(tidyverse)
 library(ecomplexity)
 library(strayr)
+library(usethis)
 
 labour_force <- read_absdata("labour_force") |> 
   select(date, indicator, sex, age, state, value, series_type, unit) |> 
@@ -11,12 +12,19 @@ labour_force <- read_absdata("labour_force") |>
          year = year(date),
          value = ifelse(unit == "000", 1000*value, value))
 
-usethis::use_data(labour_force, compress = 'xz', overwrite = TRUE)
+use_data(labour_force, compress = 'xz', overwrite = TRUE)
 
-industry_employment <- read_absdata("industry_employment") |> 
-  select(date, indicator, industry, state, series_type, value, value_share, unit)
+industry_employment <- read_abs("6291.0.55.001", table = "5", retain_files = F)  |> 
+  separate(series, into = c("state", "industry", "indicator"), sep = ";", extra = "drop") |> 
+  mutate(across(c("state", "industry", "indicator"), ~ gsub(pattern = "> ", x = .x, replacement = "")),
+         across(where(is.character), ~trimws(.x)),
+                indicator = ifelse(indicator == "", industry, indicator),
+                industry = ifelse(grepl(x = industry, pattern = "Employed"), "Total (industry)", industry)) |> 
+  group_by(date, indicator, state) |> 
+  mutate(value_share = 200 * value / sum(value)) |> 
+  ungroup() 
 
-usethis::use_data(industry_employment, compress = 'xz', overwrite = TRUE)
+use_data(industry_employment, compress = 'xz', overwrite = TRUE)
 
 dashboard_data <- bind_rows(
   labour_force,
@@ -30,7 +38,7 @@ dashboard_data <- dashboard_data |>
   filter(between(date, min(relevant_dates), max(relevant_dates))) |> 
   mutate(year = year(date))
 
-usethis::use_data(dashboard_data, compress = 'xz', overwrite = TRUE)  
+use_data(dashboard_data, compress = 'xz', overwrite = TRUE)  
          
 # Economic Complexity -----------------------------------------------------
 
@@ -40,7 +48,7 @@ complexity_exports <- read_complexitydata("state_economic_complexity") |>
   select(year, location_code, hs_product_code, export_value, rca) |> 
   inner_join(read_complexitydata("atlas_pci"), by = c("hs_product_code", "year"))
 
-usethis::use_data(complexity_exports, compress = 'xz', overwrite = TRUE)
+use_data(complexity_exports, compress = 'xz', overwrite = TRUE)
 
 complexity_rankings <- read_complexitydata("state_economic_complexity") |> 
   distinct(year, location_code, eci_rank) |> 
@@ -61,7 +69,7 @@ complexity_rankings <- complexity_rankings |>
   inner_join(complexity_rankings_first) |> 
   inner_join(complexity_rankings_final)
 
-usethis::use_data(complexity_rankings, overwrite = TRUE)
+use_data(complexity_rankings, overwrite = TRUE)
 
 complexity_opportunities <- read_complexitydata("state_economic_complexity") |> 
   filter(year == max(year)) |> 
@@ -71,4 +79,4 @@ complexity_opportunities <- read_complexitydata("state_economic_complexity") |>
 complexity_opportunities <- complexity_opportunities |> 
   inner_join(complexity_classification) 
 
-usethis::use_data(complexity_opportunities, compress = 'xz', overwrite = TRUE)
+use_data(complexity_opportunities, compress = 'xz', overwrite = TRUE)
