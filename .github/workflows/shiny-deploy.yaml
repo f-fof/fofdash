@@ -22,7 +22,7 @@ jobs:
         run: |
           sudo apt install libcurl4-openssl-dev libfontconfig1-dev libfreetype6-dev libfribidi-dev libgit2-dev libglpk-dev libharfbuzz-dev libjpeg-dev libpng-dev libtiff-dev libx11-dev pandoc
           
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - uses: r-lib/actions/setup-pandoc@v2
       
