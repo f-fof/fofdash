@@ -41,6 +41,9 @@ summaryServer <- function(id, data) {
                         series_type == "Trend") %>%
           distinct(state, indicator, series_type) %>%
           as.list()
+
+        using$age = "Total (age)"
+        using$sex = "Persons"
         
         sparklines <- create_sparklines(data,  input$state)
         
@@ -50,7 +53,7 @@ summaryServer <- function(id, data) {
                         series_type == "Trend",
                         age == "Total (age)",
                         sex == "Persons",
-                        date == max(.$date)) %>%
+                        date == max(date)) %>%
           select(indicator, unit, current = value)
         
         over_month <- data %>%

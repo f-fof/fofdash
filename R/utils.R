@@ -208,8 +208,7 @@ next_release <- function() {
     rvest::html_nodes(xpath = '//*[@id="release-date-section"]/div[2]/div/div/ul/li[1]/span/text()') |> 
     rvest::html_text() 
   
-  next_release <- next_release |> 
-    gsub(x = next_release, pattern = "([A-Z])\\w+", replacement = "") |> 
+  next_release <-  gsub(x = next_release, pattern = "([A-Z])\\w+", replacement = "") |> 
     trimws()
   
   next_release <- as.Date(next_release, format = "%d/%m/%Y")
